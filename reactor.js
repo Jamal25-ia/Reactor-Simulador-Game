@@ -369,8 +369,8 @@ class NuclearReactor {
         this.elements.damageValue.textContent = Math.round(this.damage) + '%';
         
         const progressPercent = (this.totalPowerGenerated / this.levelTarget * 100);
+        this.elements.targetDisplay.textContent = `${Math.round(this.totalPowerGenerated)}/${this.levelTarget} MW`;
         this.elements.progressDisplay.style.width = Math.min(100, progressPercent) + '%';
-        this.elements.progressDisplay.textContent = `${Math.round(this.totalPowerGenerated)}/${this.levelTarget} MW`;
         
         // Alerta única de refrigerante vacío
         if (this.coolantLevel <= 0) {
