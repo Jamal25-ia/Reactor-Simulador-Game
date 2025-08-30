@@ -123,7 +123,9 @@ class NuclearReactor {
         this.damage = Math.max(0, Math.min(this.maxDamage, this.damage + tempDamageRate));
         
         this.pressure = 100 + (this.temperature - 200) * 0.5;
-        this.coolantLevel = Math.max(0, this.coolantLevel - 0.1 + (this.coolingSpeed * 0.001));
+
+        this.coolantLevel = Math.max(0, Math.min(100, 
+        this.coolantLevel - 0.2 - (this.coolantFlow * this.coolingSpeed) * 0.0005 + this.coolingSpeed * 0.001));
         
         const damageMultiplier = 1 - (this.damage / 100);
         this.powerOutput = Math.max(0, Math.min(1000, 
@@ -308,6 +310,14 @@ class NuclearReactor {
         this.elements.pressureBar.textContent = Math.round(this.pressure) + ' bar';
         this.elements.coolantBar.style.width = this.coolantLevel + '%';
         this.elements.coolantBar.textContent = Math.round(this.coolantLevel) + '%';
+        if (this.coolantLevel <= 0 && !this.hasShownEmptyAlert) {
+            this.hasShownEmptyAlert = true;
+            alert('¡Sin refrigerante! El reactor se sobrecalentará.');
+            this.temperature += 50; // Penalización severa
+        } else if (this.coolantLevel > 0) {
+            // Resetear bandera cuando vuelve a tener refrigerante
+            this.hasShownEmptyAlert = false;
+        }
         this.elements.powerBar.style.width = this.powerOutput / 10 + '%';
         this.elements.powerBar.textContent = Math.round(this.powerOutput) + ' MW';
         this.elements.powerValue.textContent = Math.round(this.powerOutput) + ' MW';
@@ -331,6 +341,20 @@ class NuclearReactor {
             }
         }, 400);
     }
-}
 
+    rechargeCoolant() {
+        if (this.coolantLevel < 100) {
+            this.coolantLevel = Math.min(100, this.coolantLevel + 10);
+            this.updateDisplay();
+            
+            // Costo por recarga (puede ser energía o dinero)
+            this.totalPowerGenerated = Math.max(0, this.totalPowerGenerated - 50);
+            
+            alert(`Refrigerante recargado: ${Math.round(this.coolantLevel)}%\n` +
+                  `Costo: 50 MW de energía`);
+        } else {
+            alert('Refrigerante al máximo');
+        }
+    }
+}
 document.addEventListener('DOMContentLoaded', () => new NuclearReactor());
