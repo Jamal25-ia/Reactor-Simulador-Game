@@ -294,7 +294,7 @@ class NuclearReactor {
             this.hasShownEmptyAlert = false;
             this.updateDisplay();
             this.totalPowerGenerated = Math.max(0, this.totalPowerGenerated - 50);
-            alert(`Refrigerante recargado: ${Math.round(this.coolantLevel)}%\nCosto: 50 MW`);
+            //alert(`Refrigerante recargado: ${Math.round(this.coolantLevel)}%\nCosto: 50 MW`);
         } else {
             alert('Refrigerante al máximo');
         }
