@@ -1,0 +1,288 @@
+/* Variables globales */
+:root {
+    --bg-color: #0a0a0a;
+    --panel-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+    --text-color: #ffffff;
+    --accent-color: #00ffff;
+    --danger-color: #ff3333;
+    --warning-color: #ffcc00;
+    --success-color: #00ff00;
+    --info-color: #00ccff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+/* Paneles compactos */
+.panel {
+    background: var(--panel-bg);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+    height: 100%;
+}
+
+/* Textos grandes */
+.fs-5 { font-size: 1.25rem !important; }
+.fs-6 { font-size: 1.1rem !important; }
+
+/* Gauge compacto */
+.gauge-container {
+    display: flex;
+    justify-content: center;
+}
+
+.gauge {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        #ff0000 0deg,
+        #ff6600 60deg,
+        #ffcc00 120deg,
+        #00ff00 180deg,
+        #00ccff 240deg,
+        #0066ff 300deg,
+        #0000ff 360deg
+    );
+    position: relative;
+}
+
+.gauge-inner {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Reactor core más pequeño */
+.reactor-core {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    background: radial-gradient(circle, #1a1a2e, #000);
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.fuel-rod {
+    position: absolute;
+    width: 15px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff6600, #ff0000);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px rgba(255, 102, 0, 0.8);
+}
+
+.control-rod {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    background: linear-gradient(to bottom, #666, #333);
+    top: 0;
+    transition: transform 0.3s ease;
+}
+
+/* Indicadores de estado compactos */
+.status-grid {
+    display: grid;
+    gap: 8px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.status-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-normal { background-color: var(--success-color); }
+.status-warning { background-color: var(--warning-color); }
+.status-critical { background-color: var(--danger-color); }
+
+/* Alertas más pequeñas */
+.alert {
+    display: none;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+/* Botones grandes */
+.btn {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* Progress bars más grandes */
+.progress {
+    height: 25px;
+}
+
+.progress-bar {
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Range sliders más grandes */
+.form-range {
+    height: 1.5rem;
+}
+
+/* Efectos de daño */
+.reactor-core.damaged {
+    animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* Efecto de advertencia de daño */
+.damage-warning {
+    animation: damage-pulse 1s infinite;
+}
+
+@keyframes damage-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Barra de progreso del nivel */
+.level-badge {
+    background: var(--success-color);
+    color: var(--bg-color);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.level-badge i {
+    margin-right: 5px;
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 10px;
+    }
+    
+    .gauge {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .gauge-inner {
+        width: 90px;
+        height: 90px;
+        font-size: 20px;
+    }
+    
+    .reactor-core {
+        width: 150px;
+        height: 150px;
+    }
+    
+    body {
+        font-size: 14px;
+    }
+}
+
+/* Animaciones */
+.alert {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Hover effects */
+.panel:hover {
+    box-shadow: 0 6px 20px rgba(0, 255, 255, 0.3);
+}
+
+/* Gráfico compacto */
+#trendsChart {
+    width: 100%;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+/* Daño visual en reactor */
+.reactor-core.severe-damage {
+    filter: brightness(0.7) contrast(1.2);
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.8) !important;
+}
+/* Efecto de explosión */
+.explosion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #ff6600, #ff0000);
+    z-index: 9999;
+    animation: explode 0.5s ease-out;
+    display: none;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.reactor-core.meltdown {
+    animation: meltdown 2s infinite;
+    background: radial-gradient(circle, #ff0000, #660000) !important;
+}
+
+@keyframes meltdown {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+}
+
+.damage-critical {
+    animation: critical-pulse 0.3s infinite;
+    border: 3px solid #ff0000 !important;
+}
+
+@keyframes critical-pulse {
+    0%, 100% { box-shadow: 0 0 20px #ff0000; }
+    50% { box-shadow: 0 0 40px #ff0000; }
+}

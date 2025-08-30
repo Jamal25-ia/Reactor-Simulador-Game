@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Reactor Nuclear PWR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid p-3">
+        <h1 class="text-center mb-3 fw-bold d-flex align-items-center justify-content-center gap-3">
+            <i class="fas fa-atom"></i> Reactor PWR
+            <a href="ayuda.html" class="btn btn-outline-info btn-sm" title="Ver ayuda">
+                <i class="fas fa-question-circle"></i>
+            </a>
+        </h1>
+
+        <!-- Alertas -->
+        <div class="alert alert-danger py-2" id="criticalAlert" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> ¡CRÍTICO! SCRAM inmediato
+        </div>
+        <div class="alert alert-warning py-2" id="warningAlert" role="alert">
+            <i class="fas fa-exclamation-circle"></i> Alerta: Sistema fuera de rango
+        </div>
+
+        <div class="row g-3">
+            <!-- Panel de Monitoreo -->
+            <div class="col-lg-3 col-md-6">
+                <div class="panel">
+                    <h3 class="fs-5 mb-3"><i class="fas fa-chart-line"></i> Monitoreo</h3>
+                    
+                    <div class="gauge-container mb-3">
+                        <div class="gauge">
+                            <div class="gauge-inner" id="tempDisplay">350°C</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Presión</label>
+                        <div class="progress" style="height: 25px">
+                            <div class="progress-bar bg-info fs-6" id="pressureBar" style="width: 70%">155 bar</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Refrigerante</label>
+                        <div class="progress" style="height: 25px">
+                            <div class="progress-bar bg-primary fs-6" id="coolantBar" style="width: 85%">85%</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Daño: <span id="damageValue" class="text-danger">0%</span></label>
+                        <div class="progress" style="height: 25px">
+                            <div class="progress-bar bg-danger fs-6" id="damageBar" style="width: 0%">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <span class="status-indicator" id="reactorStatus"></span>
+                            <span class="fw-bold">Reactor: <span id="reactorState">Normal</span></span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-indicator" id="coolantStatus"></span>
+                            <span class="fw-bold">Refrigeración: <span id="coolantState">Activa</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel de Control -->
+            <div class="col-lg-3 col-md-6">
+                <div class="panel">
+                    <h3 class="fs-5 mb-3"><i class="fas fa-sliders-h"></i> Control</h3>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Barras Control: <span id="rodValue" class="text-warning">70%</span></label>
+                        <input type="range" class="form-range" id="controlRods" min="0" max="100" value="70">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Refrigeración: <span id="coolingValue" class="text-info">50%</span></label>
+                        <input type="range" class="form-range" id="coolingSpeed" min="0" max="100" value="50">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Flujo: <span id="flowValue" class="text-primary">75%</span></label>
+                        <input type="range" class="form-range" id="coolantFlow" min="0" max="100" value="75">
+                    </div>
+                    
+                    <button class="btn btn-danger w-100 fw-bold py-2 mb-2" id="scramButton">
+                        <i class="fas fa-stop-circle"></i> SCRAM
+                    </button>
+                    
+                    <button class="btn btn-info w-100 fw-bold py-2 mt-2" onclick="reactor.rechargeCoolant()">
+                        <i class="fas fa-tint"></i> Recargar Refrigerante (+10%)
+                    </button>
+
+                    <button class="btn btn-success w-100 fw-bold py-2" id="nextLevelBtn" style="display: none !important;">
+                        <i class="fas fa-arrow-up"></i> Siguiente Nivel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel de Estado del Reactor -->
+            <div class="col-lg-3 col-md-6">
+                <div class="panel">
+                    <h3 class="fs-5 mb-3"><i class="fas fa-heartbeat"></i> Estado Reactor</h3>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Nivel: <span id="levelDisplay" class="text-warning">1</span></label>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold fs-6">Objetivo: <span id="targetDisplay" class="text-info">1000 MW</span></label>
+                        <div class="progress" style="height: 25px">
+                            <div class="progress-bar bg-success fs-6" id="progressDisplay" style="width: 0%">0/1000 MW</div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="level-badge">
+                            <i class="fas fa-trophy"></i>
+                            <span>Nivel <span id="currentLevelBadge">1</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualización -->
+            <div class="col-lg-3 col-md-6">
+                <div class="panel">
+                    <h3 class="fs-5 mb-3"><i class="fas fa-industry"></i> Reactor</h3>
+                    
+                    <div class="reactor-core mx-auto" id="reactorCore">
+                        <div class="fuel-rod"></div>
+                        <div class="control-rod" style="left: 25%;" id="rod1"></div>
+                        <div class="control-rod" style="left: 50%;" id="rod2"></div>
+                        <div class="control-rod" style="left: 75%;" id="rod3"></div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <label class="fw-bold fs-6">Potencia: <span id="powerValue" class="text-success">750 MW</span></label>
+                        <div class="progress" style="height: 25px">
+                            <div class="progress-bar bg-success fs-6" id="powerBar" style="width: 75%">750 MW</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gráfico compacto -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="panel">
+                    <h3 class="fs-5 mb-2"><i class="fas fa-chart-area"></i> Tendencias</h3>
+                    <canvas id="trendsChart" width="100%" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="reactor.js"></script>
+</body>
+</html>

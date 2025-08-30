@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda - Simulador Reactor Nuclear PWR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .help-section {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .parameter-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .safe-range {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .warning-range {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+        
+        .danger-range {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-question-circle"></i> Ayuda - Simulador Reactor PWR
+        </h1>
+        
+        <div class="row">
+            <div class="col-12">
+                <!-- Introducción -->
+                <div class="help-section">
+                    <h2><i class="fas fa-info-circle"></i> ¿Qué es un reactor PWR?</h2>
+                    <p class="fs-5">
+                        PWR (Pressurized Water Reactor) es el tipo más común de reactor nuclear. 
+                        Usa agua presurizada como refrigerante y moderador de neutrones.
+                    </p>
+                </div>
+
+                <!-- Parámetros del Sistema -->
+                <div class="help-section">
+                    <h2><i class="fas fa-list-ul"></i> Parámetros del Sistema</h2>
+                    
+                    <div class="parameter-card">
+                        <h4><i class="fas fa-thermometer-half"></i> Temperatura del Núcleo</h4>
+                        <p><strong>Descripción:</strong> Temperatura del agua en el núcleo del reactor</p>
+                        <p><strong>Unidades:</strong> Grados Celsius (°C)</p>
+                        <p><strong>Rango seguro:</strong> <span class="safe-range">200-400°C</span></p>
+                        <p><strong>Alerta:</strong> <span class="warning-range">400-450°C</span></p>
+                        <p><strong>Crítico:</strong> <span class="danger-range">>450°C</span></p>
+                    </div>
+
+                    <div class="parameter-card">
+                        <h4><i class="fas fa-tachometer-alt"></i> Presión del Sistema</h4>
+                        <p><strong>Descripción:</strong> Presión del agua refrigerante</p>
+                        <p><strong>Unidades:</strong> Bar (atmósferas)</p>
+                        <p><strong>Rango seguro:</strong> <span class="safe-range">150-180 bar</span></p>
+                        <p><strong>Alerta:</strong> <span class="warning-range">>180 bar</span></p>
+                    </div>
+
+                    <div class="parameter-card">
+                        <h4><i class="fas fa-tint"></i> Nivel de Refrigerante</h4>
+                        <p><strong>Descripción:</strong> Porcentaje de refrigerante disponible</p>
+                        <p><strong>Unidades:</strong> Porcentaje (%)</p>
+                        <p><strong>Rango seguro:</strong> <span class="safe-range">40-100%</span></p>
+                        <p><strong>Alerta:</strong> <span class="warning-range">20-40%</span></p>
+                        <p><strong>Crítico:</strong> <span class="danger-range"><20%</span></p>
+                    </div>
+
+                    <div class="parameter-card">
+                        <h4><i class="fas fa-bolt"></i> Potencia de Salida</h4>
+                        <p><strong>Descripción:</strong> Energía eléctrica generada</p>
+                        <p><strong>Unidades:</strong> Megawatts (MW)</p>
+                        <p><strong>Rango normal:</strong> <span class="safe-range">0-1000 MW</span></p>
+                    </div>
+                </div>
+
+                <!-- Controles -->
+                <div class="help-section">
+                    <h2><i class="fas fa-sliders-h"></i> Controles del Simulador</h2>
+                    
+                    <div class="parameter-card">
+                        <h4><i class="fas fa-minus-square"></i> Barras de Control</h4>
+                        <p><strong>Función:</strong> Controlan la reactividad nuclear</p>
+                        <p><strong>0%:</strong> Barras completamente fuera (máxima reactividad)</p>
+                        <p><strong>100%:</strong> Barras completamente insertadas (reactor apagado)</p>
+                        <p><strong>Consejo:</strong> Sube para reducir temperatura, baja para aumentar potencia</p>
+                    </div>
+
+                    <div class="parameter-card">
+                        <h4><i class="fas fa-fan"></i> Velocidad de Refrigeración</h4>
+                        <p><strong>Función:</strong> Controla la velocidad de las bombas de refrigeración</p>
+                        <p><strong>Efecto:</strong> Mayor velocidad = mayor enfriamiento</p>
+                    </div>
+
+                    <div class="parameter-card">
+                        <h4><i class="fas fa-water"></i> Flujo de Refrigerante</h4>
+                        <p><strong>Función:</strong> Controla la cantidad de agua refrigerante circulando</p>
+                        <p><strong>Efecto:</strong> Mayor flujo = mejor enfriamiento</p>
+                    </div>
+                </div>
+
+                <!-- Botón SCRAM -->
+                <div class="help-section">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Botón SCRAM</h2>
+                    <div class="parameter-card">
+                        <h4>¿Qué es SCRAM?</h4>
+                        <p><strong>Significado:</strong> Safety Control Rod Axe Man</p>
+                        <p><strong>Función:</strong> Parada de emergencia inmediata del reactor</p>
+                        <p><strong>Efecto:</strong> Inserta todas las barras de control al 100%</p>
+                        <p><strong>Cuándo usar:</strong> Solo en emergencias críticas</p>
+                    </div>
+                </div>
+
+                <!-- Estrategias de Operación -->
+                <div class="help-section">
+                    <h2><i class="fas fa-lightbulb"></i> Estrategias de Operación</h2>
+                    
+                    <div class="parameter-card">
+                        <h4>Arranque del Reactor</h4>
+                        <ol>
+                            <li>Asegúrate que temperatura esté < 300°C</li>
+                            <li>Baja barras de control a 60-70%</li>
+                            <li>Ajusta refrigeración a 50-60%</li>
+                            <li>Monitorea temperatura gradualmente</li>
+                        </ol>
+                    </div>
+
+                    <div class="parameter-card">
+                        <h4>Control de Temperatura Alta</h4>
+                        <ol>
+                            <li>Sube las barras de control 10-20%</li>
+                            <li>Aumenta velocidad de refrigeración</li>
+                            <li>Aumenta flujo de refrigerante</li>
+                            <li>Monitorea constantemente</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Glosario -->
+                <div class="help-section">
+                    <h2><i class="fas fa-book"></i> Glosario Técnico</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><strong>Fisión Nuclear:</strong> División de átomos pesados</li>
+                                <li><strong>Reactividad:</strong> Capacidad de mantener reacción en cadena</li>
+                                <li><strong>Moderador:</strong> Reduce velocidad de neutrones</li>
+                                <li><strong>Refrigerante:</strong> Transfiere calor fuera del núcleo</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><strong>PWR:</strong> Reactor de Agua a Presión</li>
+                                <li><strong>Barra de Control:</strong> Absorbe neutrones para controlar reacción</li>
+                                <li><strong>SCRAM:</strong> Parada de emergencia</li>
+                                <li><strong>Meltdown:</strong> Sobrecalentamiento extremo del núcleo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Volver -->
+                <div class="text-center mt-4">
+                    <a href="index.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-arrow-left"></i> Volver al Simulador
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
