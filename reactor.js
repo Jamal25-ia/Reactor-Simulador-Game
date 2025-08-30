@@ -21,6 +21,7 @@ class NuclearReactor {
         
         // Estado del sistema
         this.isOperating = true;
+        this.isPaused = false;
         this.dataHistory = [];
         
         // Control de alertas únicas
@@ -87,6 +88,31 @@ class NuclearReactor {
         document.getElementById('nextLevelBtn').addEventListener('click', () => {
             this.nextLevel();
         });
+        
+        // Botón de pausa
+        if (document.getElementById('pauseBtn')) {
+            document.getElementById('pauseBtn').addEventListener('click', () => {
+                this.togglePause();
+            });
+        }
+    }
+    
+    togglePause() {
+        this.isPaused = !this.isPaused;
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) {
+            pauseBtn.innerHTML = this.isPaused ? 
+                '<i class="fas fa-play"></i> Reanudar' : 
+                '<i class="fas fa-pause"></i> Pausar';
+        }
+        
+        if (this.isPaused) {
+            this.elements.reactorState.textContent = 'PAUSADO';
+            this.elements.reactorStatus.className = 'status-indicator status-warning';
+        } else {
+            this.elements.reactorState.textContent = 'Normal';
+            this.elements.reactorStatus.className = 'status-indicator status-normal';
+        }
     }
     
     updateControlRods() {
@@ -99,6 +125,8 @@ class NuclearReactor {
     }
     
     calculateReactorPhysics() {
+        if (this.isPaused) return;
+        
         const reactivityFactor = (100 - this.controlRods) / 100;
         const heatGenerated = reactivityFactor * 1000;
         const coolingEffect = (this.coolantFlow * this.coolingSpeed) / 10000 * 800;
@@ -106,7 +134,7 @@ class NuclearReactor {
         const netHeat = heatGenerated - coolingEffect;
         this.temperature = Math.max(200, Math.min(600, this.temperature + netHeat * 0.1));
         
-        // SISTEMA DE DAÑO CORREGIDO
+        // SISTEMA DE DAÑO
         const safeMinTemp = 200;
         const safeMaxTemp = 400;
         
@@ -118,24 +146,24 @@ class NuclearReactor {
         } else if (this.temperature < safeMinTemp) {
             const deficitTemp = safeMinTemp - this.temperature;
             tempDamageRate = deficitTemp * 0.05;
-        } else {
-            tempDamageRate = 0;
         }
         
         this.damage = Math.max(0, Math.min(this.maxDamage, this.damage + tempDamageRate));
         
-        // CONSUMO REAL DE REFRIGERANTE con recarga
-        this.coolantLevel = Math.max(0, Math.min(100, 
-            this.coolantLevel - 0.2 - (this.coolantFlow * this.coolingSpeed) * 0.0005));
-        
         this.pressure = 100 + (this.temperature - 200) * 0.5;
         
+        // REFRIGERANTE CONSUMO 200% MÁS LENTO (reducción drástica)
+        const coolantConsumption = 0.04 + (this.coolantFlow * this.coolingSpeed) * 0.0001; // 200% más lento
+        this.coolantLevel = Math.max(0, Math.min(100, this.coolantLevel - coolantConsumption));
+        
+        // AUMENTO DE GENERACIÓN DE ELECTRICIDAD (3x más rápido)
         const damageMultiplier = 1 - (this.damage / 100);
         this.powerOutput = Math.max(0, Math.min(1000, 
             reactivityFactor * 1000 * (1 - (this.temperature - 350) / 500) * damageMultiplier));
         
+        // GENERACIÓN 3x MÁS RÁPIDA
         if (!this.levelComplete && this.powerOutput > 0) {
-            this.totalPowerGenerated += this.powerOutput * 0.01;
+            this.totalPowerGenerated += this.powerOutput * 0.03; // Cambiado de 0.01 a 0.03
         }
         
         this.updateCoreVisual();
@@ -218,6 +246,7 @@ class NuclearReactor {
             totalPowerGenerated: 0,
             levelComplete: false,
             isOperating: true,
+            isPaused: false,
             dataHistory: [],
             hasShownEmptyAlert: false
         });
@@ -230,8 +259,11 @@ class NuclearReactor {
         
         if (this.elements.explosionDiv) this.elements.explosionDiv.style.display = 'none';
         this.elements.reactorCore.classList.remove('meltdown', 'damage-critical');
-        this.updateDisplay();
         
+        const pauseBtn = document.getElementById('pauseBtn');
+        if (pauseBtn) pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+        
+        this.updateDisplay();
         alert('Simulador reiniciado. ¡Buena suerte!');
     }
     
@@ -259,7 +291,7 @@ class NuclearReactor {
     rechargeCoolant() {
         if (this.coolantLevel < 100) {
             this.coolantLevel = Math.min(100, this.coolantLevel + 10);
-            this.hasShownEmptyAlert = false; // Resetear bandera al recargar
+            this.hasShownEmptyAlert = false;
             this.updateDisplay();
             this.totalPowerGenerated = Math.max(0, this.totalPowerGenerated - 50);
             alert(`Refrigerante recargado: ${Math.round(this.coolantLevel)}%\nCosto: 50 MW`);
@@ -398,11 +430,17 @@ class NuclearReactor {
             this.elements.coolantStatus.className = 'status-indicator status-normal';
             this.elements.coolantState.textContent = 'Normal';
         }
+        
+        // Estado de pausa
+        if (this.isPaused) {
+            this.elements.reactorState.textContent = 'PAUSADO';
+            this.elements.reactorStatus.className = 'status-indicator status-warning';
+        }
     }
     
     startSimulation() {
         setInterval(() => {
-            if (this.isOperating) {
+            if (this.isOperating && !this.isPaused) {
                 this.calculateReactorPhysics();
                 this.updateDisplay();
                 this.updateChart();
@@ -411,5 +449,5 @@ class NuclearReactor {
     }
 }
 
-// Hacer el método rechargeCoolant global para poder llamarlo desde HTML
+// Hacer métodos globales para poder llamarlos desde HTML
 window.reactor = new NuclearReactor();

@@ -94,13 +94,17 @@
                     <button class="btn btn-danger w-100 fw-bold py-2 mb-2" id="scramButton">
                         <i class="fas fa-stop-circle"></i> SCRAM
                     </button>
-                    
+
                     <button class="btn btn-info w-100 fw-bold py-2 mt-2" onclick="reactor.rechargeCoolant()">
                         <i class="fas fa-tint"></i> Recargar Refrigerante (+10%)
                     </button>
 
                     <button class="btn btn-success w-100 fw-bold py-2" id="nextLevelBtn" style="display: none !important;">
                         <i class="fas fa-arrow-up"></i> Siguiente Nivel
+                    </button>
+                    <!-- Botón de pausa corregido -->
+                    <button class="btn btn-warning w-100 fw-bold py-2 mt-2" id="pauseBtn" onclick="reactor.togglePause()">
+                        <i class="fas fa-pause"></i> Pausar
                     </button>
                 </div>
             </div>
