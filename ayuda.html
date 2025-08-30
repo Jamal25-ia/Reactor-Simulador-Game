@@ -23,172 +23,223 @@
             margin: 10px 0;
         }
         
-        .safe-range {
-            color: var(--success-color);
-            font-weight: bold;
+        .safe-range { color: var(--success-color); font-weight: bold; }
+        .warning-range { color: var(--warning-color); font-weight: bold; }
+        .danger-range { color: var(--danger-color); font-weight: bold; }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
         }
         
-        .warning-range {
-            color: var(--warning-color);
-            font-weight: bold;
-        }
-        
-        .danger-range {
-            color: var(--danger-color);
-            font-weight: bold;
+        .tip-box {
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 3px solid var(--accent-color);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container-fluid p-4">
         <h1 class="text-center mb-4">
-            <i class="fas fa-question-circle"></i> Ayuda - Simulador Reactor PWR
+            <i class="fas fa-question-circle"></i> Guía Completa - Simulador Reactor PWR
         </h1>
-        
-        <div class="row">
-            <div class="col-12">
-                <!-- Introducción -->
-                <div class="help-section">
-                    <h2><i class="fas fa-info-circle"></i> ¿Qué es un reactor PWR?</h2>
-                    <p class="fs-5">
-                        PWR (Pressurized Water Reactor) es el tipo más común de reactor nuclear. 
-                        Usa agua presurizada como refrigerante y moderador de neutrones.
-                    </p>
+
+        <!-- NUEVAS CARACTERÍSTICAS -->
+        <div class="help-section">
+            <h2><i class="fas fa-star"></i> Novedades 2024</h2>
+            <div class="feature-grid">
+                <div class="parameter-card">
+                    <h4><i class="fas fa-heart-broken"></i> Sistema de Daño</h4>
+                    <p>El reactor ahora sufre daño por temperatura extrema</p>
+                    <ul>
+                        <li>Daño por temperatura >400°C</li>
+                        <li>Daño por temperatura <200°C</li>
+                        <li>Explosión al 100% de daño</li>
+                        <li>Afecta la potencia generada</li>
+                    </ul>
                 </div>
-
-                <!-- Parámetros del Sistema -->
-                <div class="help-section">
-                    <h2><i class="fas fa-list-ul"></i> Parámetros del Sistema</h2>
-                    
-                    <div class="parameter-card">
-                        <h4><i class="fas fa-thermometer-half"></i> Temperatura del Núcleo</h4>
-                        <p><strong>Descripción:</strong> Temperatura del agua en el núcleo del reactor</p>
-                        <p><strong>Unidades:</strong> Grados Celsius (°C)</p>
-                        <p><strong>Rango seguro:</strong> <span class="safe-range">200-400°C</span></p>
-                        <p><strong>Alerta:</strong> <span class="warning-range">400-450°C</span></p>
-                        <p><strong>Crítico:</strong> <span class="danger-range">>450°C</span></p>
-                    </div>
-
-                    <div class="parameter-card">
-                        <h4><i class="fas fa-tachometer-alt"></i> Presión del Sistema</h4>
-                        <p><strong>Descripción:</strong> Presión del agua refrigerante</p>
-                        <p><strong>Unidades:</strong> Bar (atmósferas)</p>
-                        <p><strong>Rango seguro:</strong> <span class="safe-range">150-180 bar</span></p>
-                        <p><strong>Alerta:</strong> <span class="warning-range">>180 bar</span></p>
-                    </div>
-
-                    <div class="parameter-card">
-                        <h4><i class="fas fa-tint"></i> Nivel de Refrigerante</h4>
-                        <p><strong>Descripción:</strong> Porcentaje de refrigerante disponible</p>
-                        <p><strong>Unidades:</strong> Porcentaje (%)</p>
-                        <p><strong>Rango seguro:</strong> <span class="safe-range">40-100%</span></p>
-                        <p><strong>Alerta:</strong> <span class="warning-range">20-40%</span></p>
-                        <p><strong>Crítico:</strong> <span class="danger-range"><20%</span></p>
-                    </div>
-
-                    <div class="parameter-card">
-                        <h4><i class="fas fa-bolt"></i> Potencia de Salida</h4>
-                        <p><strong>Descripción:</strong> Energía eléctrica generada</p>
-                        <p><strong>Unidades:</strong> Megawatts (MW)</p>
-                        <p><strong>Rango normal:</strong> <span class="safe-range">0-1000 MW</span></p>
-                    </div>
+                
+                <div class="parameter-card">
+                    <h4><i class="fas fa-trophy"></i> Sistema de Niveles</h4>
+                    <p>Progresión por niveles con objetivos crecientes</p>
+                    <ul>
+                        <li>Nivel 1: 1,000 MW</li>
+                        <li>Cada nivel: +1,000 MW adicionales</li>
+                        <li>Reparación parcial entre niveles</li>
+                        <li>Daño se reduce 20% al pasar nivel</li>
+                    </ul>
                 </div>
-
-                <!-- Controles -->
-                <div class="help-section">
-                    <h2><i class="fas fa-sliders-h"></i> Controles del Simulador</h2>
-                    
-                    <div class="parameter-card">
-                        <h4><i class="fas fa-minus-square"></i> Barras de Control</h4>
-                        <p><strong>Función:</strong> Controlan la reactividad nuclear</p>
-                        <p><strong>0%:</strong> Barras completamente fuera (máxima reactividad)</p>
-                        <p><strong>100%:</strong> Barras completamente insertadas (reactor apagado)</p>
-                        <p><strong>Consejo:</strong> Sube para reducir temperatura, baja para aumentar potencia</p>
-                    </div>
-
-                    <div class="parameter-card">
-                        <h4><i class="fas fa-fan"></i> Velocidad de Refrigeración</h4>
-                        <p><strong>Función:</strong> Controla la velocidad de las bombas de refrigeración</p>
-                        <p><strong>Efecto:</strong> Mayor velocidad = mayor enfriamiento</p>
-                    </div>
-
-                    <div class="parameter-card">
-                        <h4><i class="fas fa-water"></i> Flujo de Refrigerante</h4>
-                        <p><strong>Función:</strong> Controla la cantidad de agua refrigerante circulando</p>
-                        <p><strong>Efecto:</strong> Mayor flujo = mejor enfriamiento</p>
-                    </div>
+                
+                <div class="parameter-card">
+                    <h4><i class="fas fa-tint"></i> Refrigerante Consumible</h4>
+                    <p>El refrigerante ahora se consume y necesita recarga</p>
+                    <ul>
+                        <li>Consumo 200% más lento</li>
+                        <li>Costo de recarga: 50 MW</li>
+                        <li>Alerta única al vaciarse</li>
+                        <li>Penalización al quedarse sin refrigerante</li>
+                    </ul>
                 </div>
-
-                <!-- Botón SCRAM -->
-                <div class="help-section">
-                    <h2><i class="fas fa-exclamation-triangle"></i> Botón SCRAM</h2>
-                    <div class="parameter-card">
-                        <h4>¿Qué es SCRAM?</h4>
-                        <p><strong>Significado:</strong> Safety Control Rod Axe Man</p>
-                        <p><strong>Función:</strong> Parada de emergencia inmediata del reactor</p>
-                        <p><strong>Efecto:</strong> Inserta todas las barras de control al 100%</p>
-                        <p><strong>Cuándo usar:</strong> Solo en emergencias críticas</p>
-                    </div>
-                </div>
-
-                <!-- Estrategias de Operación -->
-                <div class="help-section">
-                    <h2><i class="fas fa-lightbulb"></i> Estrategias de Operación</h2>
-                    
-                    <div class="parameter-card">
-                        <h4>Arranque del Reactor</h4>
-                        <ol>
-                            <li>Asegúrate que temperatura esté < 300°C</li>
-                            <li>Baja barras de control a 60-70%</li>
-                            <li>Ajusta refrigeración a 50-60%</li>
-                            <li>Monitorea temperatura gradualmente</li>
-                        </ol>
-                    </div>
-
-                    <div class="parameter-card">
-                        <h4>Control de Temperatura Alta</h4>
-                        <ol>
-                            <li>Sube las barras de control 10-20%</li>
-                            <li>Aumenta velocidad de refrigeración</li>
-                            <li>Aumenta flujo de refrigerante</li>
-                            <li>Monitorea constantemente</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- Glosario -->
-                <div class="help-section">
-                    <h2><i class="fas fa-book"></i> Glosario Técnico</h2>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li><strong>Fisión Nuclear:</strong> División de átomos pesados</li>
-                                <li><strong>Reactividad:</strong> Capacidad de mantener reacción en cadena</li>
-                                <li><strong>Moderador:</strong> Reduce velocidad de neutrones</li>
-                                <li><strong>Refrigerante:</strong> Transfiere calor fuera del núcleo</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li><strong>PWR:</strong> Reactor de Agua a Presión</li>
-                                <li><strong>Barra de Control:</strong> Absorbe neutrones para controlar reacción</li>
-                                <li><strong>SCRAM:</strong> Parada de emergencia</li>
-                                <li><strong>Meltdown:</strong> Sobrecalentamiento extremo del núcleo</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Volver -->
-                <div class="text-center mt-4">
-                    <a href="index.html" class="btn btn-primary btn-lg">
-                        <i class="fas fa-arrow-left"></i> Volver al Simulador
-                    </a>
+                
+                <div class="parameter-card">
+                    <h4><i class="fas fa-pause"></i> Control de Pausa</h4>
+                    <p>Botón para pausar/reanudar el simulador</p>
+                    <ul>
+                        <li>Mantiene valores al pausar</li>
+                        <li>Indicador visual de estado</li>
+                        <li>Perfecto para estrategia</li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        <!-- Guía de Supervivencia -->
+        <div class="help-section">
+            <h2><i class="fas fa-book-open"></i> Guía de Supervivencia</h2>
+            
+            <div class="tip-box">
+                <h5><i class="fas fa-lightbulb"></i> Consejo #1: Control de Temperatura</h5>
+                <p>Mantén la temperatura entre <span class="safe-range">200-400°C</span> para evitar daño al reactor.</p>
+            </div>
+            
+            <div class="tip-box">
+                <h5><i class="fas fa-chart-line"></i> Consejo #2: Generación Rápida</h5>
+                <p>Ahora la generación es 3x más rápida, pero mantén ojo en el daño acumulado.</p>
+            </div>
+            
+            <div class="tip-box">
+                <h5><i class="fas fa-shield-alt"></i> Consejo #3: Gestión de Refrigerante</h5>
+                <p>Recarga refrigerante antes de llegar a 0%. El consumo es lento pero constante.</p>
+            </div>
+        </div>
+
+        <!-- Controles Actualizados -->
+        <div class="help-section">
+            <h2><i class="fas fa-sliders-h"></i> Controles Actualizados</h2>
+            
+            <div class="parameter-card">
+                <h4><i class="fas fa-pause"></i> Botón Pausar</h4>
+                <p><strong>Función:</strong> Pausa/Reanuda el simulador</p>
+                <p><strong>Estado:</strong> Cambia entre "Pausar" y "Reanudar"</p>
+                <p><strong>Uso:</strong> Presiona para detener temporalmente el reactor</p>
+            </div>
+            
+            <div class="parameter-card">
+                <h4><i class="fas fa-tint"></i> Botón Recargar Refrigerante</h4>
+                <p><strong>Función:</strong> Añade 10% de refrigerante</p>
+                <p><strong>Costo:</strong> 50 MW de energía generada</p>
+                <p><strong>Uso:</strong> Click en el botón cuando el nivel esté bajo</p>
+            </div>
+        </div>
+
+        <!-- Estrategias por Nivel -->
+        <div class="help-section">
+            <h2><i class="fas fa-chess"></i> Estrategias por Nivel</h2>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="parameter-card">
+                        <h5>Nivel 1-3</h5>
+                        <ul>
+                            <li>Mantén temperatura estable</li>
+                            <li>Recarga refrigerante a 50%</li>
+                            <li>Prioriza seguridad sobre velocidad</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="parameter-card">
+                        <h5>Nivel 4-7</h5>
+                        <ul>
+                            <li>Acepta algo de daño (20-30%)</li>
+                            <li>Usa pausa para planear</li>
+                            <li>Balancea refrigeración y flujo</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="parameter-card">
+                        <h5>Nivel 8+</h5>
+                        <ul>
+                            <li>Generación máxima aceptando daño</li>
+                            <li>SCRAM si supera 60% daño</li>
+                            <li>Recarga frecuente de refrigerante</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Rangos Actualizada -->
+        <div class="help-section">
+            <h2><i class="fas fa-table"></i> Tabla de Rangos Actualizada</h2>
+            <div class="table-responsive">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th>Óptimo</th>
+                            <th>Alerta</th>
+                            <th>Crítico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Temperatura</td>
+                            <td class="safe-range">200-400°C</td>
+                            <td class="warning-range">400-450°C</td>
+                            <td class="danger-range">>450°C</td>
+                        </tr>
+                        <tr>
+                            <td>Daño</td>
+                            <td class="safe-range">0-50%</td>
+                            <td class="warning-range">50-80%</td>
+                            <td class="danger-range">>80%</td>
+                        </tr>
+                        <tr>
+                            <td>Refrigerante</td>
+                            <td class="safe-range">40-100%</td>
+                            <td class="warning-range">20-40%</td>
+                            <td class="danger-range"><20%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FAQs Nuevas -->
+        <div class="help-section">
+            <h2><i class="fas fa-question"></i> Preguntas Frecuentes</h2>
+            
+            <div class="parameter-card">
+                <h5>¿Por qué la generación es más lenta?</h5>
+                <p>¡Error! Ahora es 3x más rápida. Revisa que no esté pausado o dañado.</p>
+            </div>
+            
+            <div class="parameter-card">
+                <h5>¿Cómo evito la explosión?</h5>
+                <p>Mantén daño <80% y temperatura <450°C. Usa SCRAM en emergencias.</p>
+            </div>
+            
+            <div class="parameter-card">
+                <h5>¿Refrigerante infinito?</h5>
+                <p>No. Se consume lentamente y necesita recarga. ¡Planea tu estrategia!</p>
+            </div>
+        </div>
+
+        <!-- Comandos Rápidos -->
+        <div class="help-section">
+            <h2><i class="fas fa-keyboard"></i> Comandos Rápidos</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><kbd>Barra de Control</kbd> - Ajusta reactividad</li>
+                        <li><kbd>Refrigeración</kbd> - Velocidad de enfriamiento</li>
+                        <li><kbd>Flujo</kbd> - Volumen de refrigerante</li>
+                        <li><kbd>SCRA

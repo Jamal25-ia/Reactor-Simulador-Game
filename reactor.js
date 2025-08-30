@@ -373,9 +373,11 @@ class NuclearReactor {
         this.elements.progressDisplay.textContent = `${Math.round(this.totalPowerGenerated)}/${this.levelTarget} MW`;
         
         // Alerta única de refrigerante vacío
-        if (this.coolantLevel <= 0 && !this.hasShownEmptyAlert) {
+        if (this.coolantLevel <= 0) {
             this.hasShownEmptyAlert = true;
-            alert('¡Sin refrigerante! El reactor se sobrecalentará.');
+            if(!this.hasShownEmptyAlert){
+                alert('¡Sin refrigerante! El reactor se sobrecalentará.');
+            }
             this.temperature += 50;
         } else if (this.coolantLevel > 0) {
             this.hasShownEmptyAlert = false;
