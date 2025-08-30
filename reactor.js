@@ -23,6 +23,9 @@ class NuclearReactor {
         this.isOperating = true;
         this.dataHistory = [];
         
+        // Control de alertas únicas
+        this.hasShownEmptyAlert = false;
+        
         this.initializeElements();
         this.setupEventListeners();
         this.startSimulation();
@@ -107,7 +110,6 @@ class NuclearReactor {
         const safeMinTemp = 200;
         const safeMaxTemp = 400;
         
-        // Calcular daño basado en cuán lejos está del rango seguro
         let tempDamageRate = 0;
         
         if (this.temperature > safeMaxTemp) {
@@ -122,10 +124,11 @@ class NuclearReactor {
         
         this.damage = Math.max(0, Math.min(this.maxDamage, this.damage + tempDamageRate));
         
-        this.pressure = 100 + (this.temperature - 200) * 0.5;
-
+        // CONSUMO REAL DE REFRIGERANTE con recarga
         this.coolantLevel = Math.max(0, Math.min(100, 
-        this.coolantLevel - 0.2 - (this.coolantFlow * this.coolingSpeed) * 0.0005 + this.coolingSpeed * 0.001));
+            this.coolantLevel - 0.2 - (this.coolantFlow * this.coolingSpeed) * 0.0005));
+        
+        this.pressure = 100 + (this.temperature - 200) * 0.5;
         
         const damageMultiplier = 1 - (this.damage / 100);
         this.powerOutput = Math.max(0, Math.min(1000, 
@@ -215,18 +218,21 @@ class NuclearReactor {
             totalPowerGenerated: 0,
             levelComplete: false,
             isOperating: true,
-            dataHistory: []
+            dataHistory: [],
+            hasShownEmptyAlert: false
         });
 
         document.getElementById('controlRods').value = 70;
         document.getElementById('coolingSpeed').value = 50;
         document.getElementById('coolantFlow').value = 75;
         this.updateControlRods();
-
         document.getElementById('nextLevelBtn').style.display = 'none';
+        
         if (this.elements.explosionDiv) this.elements.explosionDiv.style.display = 'none';
         this.elements.reactorCore.classList.remove('meltdown', 'damage-critical');
         this.updateDisplay();
+        
+        alert('Simulador reiniciado. ¡Buena suerte!');
     }
     
     nextLevel() {
@@ -235,6 +241,7 @@ class NuclearReactor {
         this.totalPowerGenerated = 0;
         this.levelComplete = false;
         this.damage = Math.max(0, this.damage - 20);
+        this.hasShownEmptyAlert = false;
 
         this.elements.levelDisplay.textContent = this.currentLevel;
         this.elements.targetDisplay.textContent = this.levelTarget;
@@ -247,6 +254,18 @@ class NuclearReactor {
         this.updateControlRods();
 
         alert(`¡Nivel ${this.currentLevel}!\nObjetivo: ${this.levelTarget} MW`);
+    }
+    
+    rechargeCoolant() {
+        if (this.coolantLevel < 100) {
+            this.coolantLevel = Math.min(100, this.coolantLevel + 10);
+            this.hasShownEmptyAlert = false; // Resetear bandera al recargar
+            this.updateDisplay();
+            this.totalPowerGenerated = Math.max(0, this.totalPowerGenerated - 50);
+            alert(`Refrigerante recargado: ${Math.round(this.coolantLevel)}%\nCosto: 50 MW`);
+        } else {
+            alert('Refrigerante al máximo');
+        }
     }
     
     emergencyScram() {
@@ -310,14 +329,6 @@ class NuclearReactor {
         this.elements.pressureBar.textContent = Math.round(this.pressure) + ' bar';
         this.elements.coolantBar.style.width = this.coolantLevel + '%';
         this.elements.coolantBar.textContent = Math.round(this.coolantLevel) + '%';
-        if (this.coolantLevel <= 0 && !this.hasShownEmptyAlert) {
-            this.hasShownEmptyAlert = true;
-            alert('¡Sin refrigerante! El reactor se sobrecalentará.');
-            this.temperature += 50; // Penalización severa
-        } else if (this.coolantLevel > 0) {
-            // Resetear bandera cuando vuelve a tener refrigerante
-            this.hasShownEmptyAlert = false;
-        }
         this.elements.powerBar.style.width = this.powerOutput / 10 + '%';
         this.elements.powerBar.textContent = Math.round(this.powerOutput) + ' MW';
         this.elements.powerValue.textContent = Math.round(this.powerOutput) + ' MW';
@@ -329,7 +340,64 @@ class NuclearReactor {
         this.elements.progressDisplay.style.width = Math.min(100, progressPercent) + '%';
         this.elements.progressDisplay.textContent = `${Math.round(this.totalPowerGenerated)}/${this.levelTarget} MW`;
         
+        // Alerta única de refrigerante vacío
+        if (this.coolantLevel <= 0 && !this.hasShownEmptyAlert) {
+            this.hasShownEmptyAlert = true;
+            alert('¡Sin refrigerante! El reactor se sobrecalentará.');
+            this.temperature += 50;
+        } else if (this.coolantLevel > 0) {
+            this.hasShownEmptyAlert = false;
+        }
+        
         this.checkAlarms();
+    }
+    
+    checkAlarms() {
+        // Resetear todas las alertas
+        this.elements.criticalAlert.style.display = 'none';
+        this.elements.warningAlert.style.display = 'none';
+        
+        // Resetear indicadores
+        this.elements.reactorStatus.className = 'status-indicator status-normal';
+        this.elements.coolantStatus.className = 'status-indicator status-normal';
+        
+        // ALERTA CRÍTICA - Prioridad máxima
+        if (this.temperature > 450 || this.damage > 80) {
+            this.elements.criticalAlert.style.display = 'block';
+            this.elements.criticalAlert.textContent = '¡CRÍTICO! Temperatura o daño elevado';
+            this.elements.reactorStatus.className = 'status-indicator status-critical';
+            this.elements.reactorState.textContent = '¡CRÍTICO!';
+        }
+        // ALERTA POR DAÑO ALTO
+        else if (this.damage > 60) {
+            this.elements.warningAlert.style.display = 'block';
+            this.elements.warningAlert.textContent = '¡Advertencia! Reactor dañado';
+            this.elements.reactorStatus.className = 'status-indicator status-warning';
+            this.elements.reactorState.textContent = 'Dañado';
+        }
+        // ALERTA POR TEMPERATURA/PRESIÓN/REFRIGERANTE
+        else if (this.temperature > 400 || this.pressure > 180 || this.coolantLevel < 30) {
+            this.elements.warningAlert.style.display = 'block';
+            this.elements.warningAlert.textContent = 'Parámetros fuera de rango seguro';
+            this.elements.reactorStatus.className = 'status-indicator status-warning';
+            this.elements.reactorState.textContent = 'Alerta';
+        }
+        // TODO NORMAL
+        else {
+            this.elements.reactorState.textContent = 'Normal';
+        }
+        
+        // ESTADO REFRIGERANTE
+        if (this.coolantLevel < 20) {
+            this.elements.coolantStatus.className = 'status-indicator status-critical';
+            this.elements.coolantState.textContent = 'Crítico';
+        } else if (this.coolantLevel < 40) {
+            this.elements.coolantStatus.className = 'status-indicator status-warning';
+            this.elements.coolantState.textContent = 'Bajo';
+        } else {
+            this.elements.coolantStatus.className = 'status-indicator status-normal';
+            this.elements.coolantState.textContent = 'Normal';
+        }
     }
     
     startSimulation() {
@@ -341,20 +409,7 @@ class NuclearReactor {
             }
         }, 400);
     }
-
-    rechargeCoolant() {
-        if (this.coolantLevel < 100) {
-            this.coolantLevel = Math.min(100, this.coolantLevel + 10);
-            this.updateDisplay();
-            
-            // Costo por recarga (puede ser energía o dinero)
-            this.totalPowerGenerated = Math.max(0, this.totalPowerGenerated - 50);
-            
-            alert(`Refrigerante recargado: ${Math.round(this.coolantLevel)}%\n` +
-                  `Costo: 50 MW de energía`);
-        } else {
-            alert('Refrigerante al máximo');
-        }
-    }
 }
-document.addEventListener('DOMContentLoaded', () => new NuclearReactor());
+
+// Hacer el método rechargeCoolant global para poder llamarlo desde HTML
+window.reactor = new NuclearReactor();
